@@ -5,6 +5,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
+
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
@@ -14,14 +15,11 @@ const [showPassword, setShowPassword] = useState(false); // For toggling passwor
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
-    const endpoint = isForgotMode ? "/api/auth/forgot-password" : "/api/auth/login";
-
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}${endpoint}`, 
-        isForgotMode ? { email: formData.email } : formData
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, 
+       formData
       );
-
+ console.log("Login Response:", response.data);
       if (response.data.success) {
         if (isForgotMode) {
           alert("Reset link sent to your email!");
@@ -104,32 +102,33 @@ const [showPassword, setShowPassword] = useState(false); // For toggling passwor
                 Forgot Password?
               </button>
             </div>
-           <div className="relative group">
+      <div className="relative group">
   {/* Left Side Lock Icon */}
   <Lock 
     className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" 
     size={18} 
   />
 
-  {/* Password Input */}
+  {/* Password Input - FIXED: Added value and onChange */}
   <input
-    type={showPassword ? "text" : "password"} // State ke mutabiq type change hoga
-    className="w-full pl-12 pr-12 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-    placeholder="Enter your password"
-    value={formData.password}
-    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+    type={showPassword ? "text" : "password"}
+    value={formData.password} // Zaroori hai
+    onChange={(e) => setFormData({ ...formData, password: e.target.value })} // Iske baghair password khali jayega
+    required
+    className="w-full bg-slate-50 dark:bg-slate-800/50 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-800 rounded-2xl py-3.5 pl-12 pr-12 transition-all outline-none text-slate-900 dark:text-white font-medium"
+    placeholder="••••••••"
   />
 
   {/* Right Side Toggle Button */}
   <button
-    type="button" // Type button lazmi rakhein taake form submit na ho jaye
+    type="button" 
     onClick={() => setShowPassword(!showPassword)}
     className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-indigo-500 transition-colors cursor-pointer"
   >
     {showPassword ? (
-      <EyeOff size={18} /> // Agar dikh raha hai toh EyeOff dikhao
+      <EyeOff size={18} /> 
     ) : (
-      <Eye size={18} />    // Agar hide hai toh Eye dikhao
+      <Eye size={18} />
     )}
   </button>
 </div>
