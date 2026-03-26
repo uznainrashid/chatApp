@@ -1,19 +1,23 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 // ArrowLeft ko yahan add kiya hai
-import { Send, User, Search, Settings, MoreVertical, Phone, Video, MessageSquare, ArrowLeft } from 'lucide-react'
+import { Send, User, Search, Settings, MoreVertical, Phone, Video, MessageSquare, ArrowLeft, ChevronRight, Shield, LogOut } from 'lucide-react'
 import axios from 'axios'
 import { io, Socket } from 'socket.io-client';
 import Link from 'next/link'
+import toast from 'react-hot-toast'
 
 const ChatPage = () => {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const [token, setToken] = useState<string | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [message, setMessage] = useState("");
   const [allUsers, setAllUsers] = useState([]);
   const [userName, setUserName] = useState("");
+  const [userData, setUserData] = useState<{ name: string; email: string } | null>(null);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [messages, setMessages] = useState([]);
   const [notifications, setNotifications] = useState<{ [key: string]: number }>({});
@@ -128,6 +132,31 @@ const handleSendMessage = (e: React.FormEvent) => {
     setMessage("");
   }
 };
+useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUserData(JSON.parse(savedUser));
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.dispatchEvent(new Event("storage"));
+    toast.success("Logged out successfully!");
+    router.push("/");
+  };
+  const getInitials = (name: string) => {
+    return name?.split(" ").map(n => n[0]).join("").toUpperCase() || "U";
+  };
 // Messages ke end par automatic scroll ke liye
 useEffect(() => {
   const chatContainer = document.querySelector('.overflow-y-auto');
@@ -143,10 +172,80 @@ useEffect(() => {
       {/* 1. Left Sidebar (Contacts) - Mobile par hidden ho jayega agar user select hai */}
       <aside className={`w-full md:w-80 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col ${selectedUser ? 'hidden md:flex' : 'flex'}`}>
         <div className="p-5 flex justify-between items-center border-b border-slate-100 dark:border-slate-800">
-          <Link href="/" className="flex items-center gap-1">
+         
            <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400">SwiftChat</h1>
-           </Link> 
-          <Settings className="text-slate-400 cursor-pointer hover:text-blue-500" size={20} />
+      <div className="relative" ref={dropdownRef}>
+      {/* Settings Icon Trigger */}
+      <Settings 
+        className={`text-slate-400 cursor-pointer transition-all duration-300 hover:text-indigo-600 ${
+          isOpen ? "rotate-90 text-indigo-600" : ""
+        }`} 
+        size={22} 
+        onClick={() => setIsOpen(!isOpen)}
+      />
+
+      {/* Dropdown Menu */}
+      {isOpen && (
+        <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-[1.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] py-3 z-50 animate-in fade-in zoom-in duration-200 origin-top-right">
+          
+          {/* User Profile Header Section */}
+          <div className="px-4 pb-3 mb-2 border-b border-slate-50 dark:border-slate-800 flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center text-white font-bold text-lg shadow-inner">
+              {getInitials(userData?.name || "User")}
+            </div>
+            <div className="flex flex-col overflow-hidden">
+              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                {userData?.name || "Guest User"}
+              </p>
+              <p className="text-[11px] text-slate-500 truncate">
+                {userData?.email || "No email provided"}
+              </p>
+            </div>
+          </div>
+
+          <div className="px-3">
+            {/* Edit Profile */}
+          <Link href="/profile-settings" className="w-full"> 
+  <button className="w-full flex items-center justify-between px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-600 rounded-xl transition-all group">
+    <div className="flex items-center gap-3">
+      <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40">
+        <User size={16} />
+      </div>
+      <span className="font-medium">Profile Settings</span>
+    </div>
+    <ChevronRight size={14} className="text-slate-300 group-hover:translate-x-0.5 transition-transform" />
+  </button>
+</Link>
+
+            {/* Privacy */}
+            <button className="w-full flex items-center justify-between px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 hover:text-indigo-600 rounded-xl transition-all group mt-1">
+              <div className="flex items-center gap-3">
+                <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40">
+                  <Shield size={16} />
+                </div>
+                <span className="font-medium">Security</span>
+              </div>
+              <ChevronRight size={14} className="text-slate-300 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </div>
+
+          <div className="h-px bg-slate-100 dark:bg-slate-800 my-2 mx-4" />
+
+          {/* Logout */}
+          <div className="px-3">
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-all font-bold group"
+            >
+              <div className="p-1.5 bg-red-50 dark:bg-red-900/20 rounded-lg group-hover:bg-red-100">
+                <LogOut size={16} />
+              </div>
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
         </div>
 
         <div className="p-4">

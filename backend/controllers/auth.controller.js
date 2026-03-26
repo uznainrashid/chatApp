@@ -24,7 +24,7 @@ export const register = async (req, res) => {
         
     }
     if (password.length < 8) {
-      return res.status(403).json({success:false, message: "Please Enter Strong Password"})
+      return res.status(403).json({success:false, message: "Please Enter 8 Character Password"})
     }
      const salt = await bcrypt.genSalt(10)
      const hashedPassword = await bcrypt.hash(password, salt)
@@ -34,7 +34,6 @@ export const register = async (req, res) => {
      const token = await createToken(user._id, user.name, user.email)
      return res.status(201).json({success:true, token , user:{name: user.name, email: user.email, _id: user._id}})
 }catch(error) {
-    console.log(error);
     return res.status(500).json({
         success:false,
         message:"Internal Server Error" 
@@ -53,7 +52,7 @@ export const login = async (req, res) => {
         }
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) {
-            return res.status(403).json({success:false, message:"Invalid Credentials"})
+            return res.status(403).json({success:false, message:"please enter your correct password"})
         }
         const token = await createToken(user._id , user.name, user.email)
         

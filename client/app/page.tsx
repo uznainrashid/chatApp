@@ -1,78 +1,90 @@
 "use client";
-import Link from "next/link";
-import { MessageSquare, Shield, Zap, ArrowRight, Github, GithubIcon } from "lucide-react";
+import { useState } from "react";
+import { MessageSquare, Zap, Shield, CheckCircle2 } from "lucide-react";
 
+// Import your existing pages as components
+import LoginPage from "./login/page";
+import SignupPage from "./signup/page";
 
 export default function HomePage() {
+  const [isLogin, setIsLogin] = useState(true);
+
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white transition-colors">
-  {/* Aapka content */}
-    
-      {/* 2. Hero Section */}
-      <section className="pt-40 pb-20 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-sm font-medium mb-8 animate-fade-in">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-            </span>
-            Real-time Chat with NestJS & Socket.io
-          </div>
-          
-          <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-8 tracking-tight">
-            Connect with friends <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
-              instantly, anywhere.
-            </span>
-          </h1>
-          
-          <p className="text-lg text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Experience lightning-fast messaging with end-to-end security. 
-            Built for developers who value speed, clean UI, and seamless communication.
-          </p>
+    <div className="h-screen w-full bg-white dark:bg-slate-950 flex items-center justify-center overflow-hidden transition-colors duration-500 relative">
+      
+      {/* Background Glows */}
+      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-200/20 dark:bg-indigo-900/10 rounded-full blur-[120px] -z-10" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-200/20 dark:bg-violet-900/10 rounded-full blur-[120px] -z-10" />
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/signup" className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-100 flex items-center justify-center gap-2 transition-all hover:-translate-y-1">
-              Start Chatting Now <ArrowRight size={20} />
-            </Link>
-            <button className="w-full sm:w-auto bg-white border border-slate-200 text-slate-700 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-slate-50 transition-all">
-              View Demo
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Features Section */}
-      <section id="features" className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold text-slate-800 mb-16">Why Choose SwiftChat?</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow text-left">
-              <div className="bg-blue-50 w-12 h-12 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
-                <Zap size={24} />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Ultra Fast</h3>
-              <p className="text-slate-500 leading-relaxed">Powered by Socket.io for millisecond latency in every message delivery.</p>
+      {/* Main Container */}
+      <div className="max-w-7xl w-full grid md:grid-cols-2 gap-8 lg:gap-16 items-center px-8 md:px-16 relative z-10">
+        
+        {/* --- NOW LEFT SIDE: Form Container --- */}
+        <div className="w-full flex justify-center md:justify-start items-center order-2 md:order-1">
+          <div className="w-full max-w-[420px] bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-100 dark:border-slate-800 overflow-hidden">
+            
+            <div className="max-h-[85vh] overflow-y-auto overflow-x-hidden no-scrollbar" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+               <style jsx global>{`
+                 .no-scrollbar::-webkit-scrollbar {
+                   display: none;
+                 }
+               `}</style>
+               {isLogin ? <LoginPage /> : <SignupPage />}
             </div>
 
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow text-left">
-              <div className="bg-indigo-50 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-600 mb-6">
-                <Shield size={24} />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Secure Auth</h3>
-              <p className="text-slate-500 leading-relaxed">JWT-based authentication ensures your conversations stay private and protected.</p>
-            </div>
-
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow text-left">
-              <div className="bg-emerald-50 w-12 h-12 rounded-2xl flex items-center justify-center text-emerald-600 mb-6">
-                <MessageSquare size={24} />
-              </div>
-              <h3 className="text-xl font-bold mb-3">Modern UI</h3>
-              <p className="text-slate-500 leading-relaxed">Clean, minimal, and fully responsive design built with Tailwind CSS.</p>
+            {/* Switcher Button */}
+            <div className="p-5 bg-slate-50/50 dark:bg-slate-800/30 border-t border-slate-100 dark:border-slate-800 text-center">
+              <p className="text-slate-500 dark:text-slate-400 text-xs md:text-sm font-semibold">
+                {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+                <button 
+                  onClick={() => setIsLogin(!isLogin)} 
+                  className="text-indigo-600 dark:text-indigo-400 cursor-pointer font-black hover:underline underline-offset-4 ml-1"
+                >
+                  {isLogin ? "Sign up for free" : "Log in here"}
+                </button>
+              </p>
             </div>
           </div>
         </div>
-      </section>
+
+        {/* --- NOW RIGHT SIDE: Branding --- */}
+        <div className="hidden md:flex flex-col space-y-6 order-1 md:order-2">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-br from-indigo-600 to-violet-600 p-2.5 rounded-xl shadow-lg shadow-indigo-200/50">
+              <MessageSquare className="text-white" size={28} />
+            </div>
+            <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+              SwiftChat
+            </h1>
+          </div>
+          
+          <div className="space-y-4">
+            <h2 className="text-5xl lg:text-6xl font-black leading-tight text-slate-900 dark:text-slate-50 tracking-tighter">
+              {isLogin ? "Welcome back to" : "Join the future of"} <br />
+              <span className="text-indigo-600">SwiftChat.</span>
+            </h2>
+            <p className="text-lg text-slate-500 dark:text-slate-400 max-w-md leading-relaxed font-medium">
+              Real-time, encrypted, and incredibly fast. Experience messaging like never before.
+            </p>
+          </div>
+
+          <ul className="space-y-4 pt-4">
+            {[
+              { icon: <Zap size={18} className="text-amber-500" />, text: "Instant message delivery" },
+              { icon: <Shield size={18} className="text-emerald-500" />, text: "End-to-end encryption" },
+              { icon: <CheckCircle2 size={18} className="text-indigo-500" />, text: "Clean distraction-free UI" }
+            ].map((item, i) => (
+              <li key={i} className="flex items-center gap-3 text-slate-600 dark:text-slate-300 font-semibold text-sm">
+                <span className="p-1.5 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-100 dark:border-slate-800">
+                  {item.icon}
+                </span>
+                {item.text}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
     </div>
   );
 }
