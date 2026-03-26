@@ -5,6 +5,6 @@ const router = express.Router()
 
 router.post('/register', register)
 router.post('/login',login)
-router.get("/allusers", authMiddleware, fetchAllUsers)
+router.get("/allusers", authMiddleware, fetchAllUsers) 
 
 export default router

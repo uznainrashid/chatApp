@@ -22,11 +22,23 @@ export default function SignupPage() {
       // 2. Request bhejein
       const response = await axios.post(url, formData);
 
-      if (response.data.success) {
-        toast.success(response.data.message || "Account created successfully!");
-        // Signup ke baad login page par bhejein ya direct dashboard par
-        router.push("/chat"); 
-      }
+   if (response.data.success) {
+      // 1. Token save karein
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      
+      // 2. Storage event dispatch karein taake puri app ko pata chal jaye
+      window.dispatchEvent(new Event("storage"));
+
+      toast.success("Account created successfully!");
+
+      // 3. THODA SA DELAY (Optional but helpful for middleware)
+      setTimeout(() => {
+        router.refresh(); // Page state clear karne ke liye
+        router.push("/chat");
+      }, 100); 
+
+    }
     } catch (error: any) {
       // Backend se aane wala error message dikhayein
       toast.error(error.response?.data?.message || "Signup failed. Please try again.");

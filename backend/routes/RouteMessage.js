@@ -9,4 +9,4 @@ router.get("/:friendId", authMiddleware, getMessages)
 
 
 
-export default router
+export default router 
