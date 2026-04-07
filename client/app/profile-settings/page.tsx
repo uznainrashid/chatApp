@@ -12,7 +12,7 @@ const ProfileSettings = () => {
     bio: 'Full Stack Developer | MERN & Next.js'
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
