@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 connectDB()
 // Cors settings
 app.use(cors({
-    origin:"https://chat-app-eta-one-62.vercel.app/",
+    origin:"https://chat-app-eta-one-62.vercel.app",
 }))
 app.use(express.json())
 // Get request
