@@ -29,7 +29,7 @@ app.use("/api/auth", authRoutes)
 app.use("/api/messages", MessageRouter)
 const io = new Server(httpServer,{ 
     cors:{ 
-        origin:"http://localhost:3000", 
+        origin:"https://chat-app-eta-one-62.vercel.app", 
         methods:["GET","POST"],
         allowedHeaders: ["authorization"],
        credentials: true
