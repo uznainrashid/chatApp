@@ -5,18 +5,19 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-
 export default function LoginPage() {
-  console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
+ 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [isForgotMode, setIsForgotMode] = useState(false); // To toggle Forgot Password UI
   const router = useRouter();
 const [showPassword, setShowPassword] = useState(false); // For toggling password visibility
+ console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
+
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, 
        formData
       );
