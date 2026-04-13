@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 connectDB()
 // Cors settings
 app.use(cors({
-  origin:true,
+  origin:"https://chat-app-eta-one-62.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
@@ -33,7 +33,7 @@ app.use("/api/messages", MessageRouter)
 // Socket.io server
 const io = new Server(httpServer, { 
     cors: { 
-        origin: true,
+      origin:"https://chat-app-eta-one-62.vercel.app",
         methods: ["GET", "POST"],
         allowedHeaders: ["authorization"],
         credentials: true
