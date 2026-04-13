@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 
 
 export default function LoginPage() {
+  console.log(process.env.NEXT_PUBLIC_BACKEND_URL)
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [isForgotMode, setIsForgotMode] = useState(false); // To toggle Forgot Password UI
