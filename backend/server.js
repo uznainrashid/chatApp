@@ -16,8 +16,11 @@ const PORT = process.env.PORT || 5000;
 connectDB()
 // Cors settings
 app.use(cors({
-    origin:"https://chat-app-eta-one-62.vercel.app",
-}))
+    origin: ["https://chat-app-eta-one-62.vercel.app", "http://localhost:5173", "http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
+
 app.use(express.json())
 // Get request
 app.get("/",(req , res)=>{
@@ -27,14 +30,15 @@ app.get("/",(req , res)=>{
 app.use("/api/auth", authRoutes)
 // Message user api 
 app.use("/api/messages", MessageRouter)
-const io = new Server(httpServer,{ 
-    cors:{ 
-        origin:"https://chat-app-eta-one-62.vercel.app", 
-        methods:["GET","POST"],
+// Socket.io server
+const io = new Server(httpServer, { 
+    cors: { 
+        origin: ["https://chat-app-eta-one-62.vercel.app", "http://localhost:5173", "http://localhost:3000"], 
+        methods: ["GET", "POST"],
         allowedHeaders: ["authorization"],
-       credentials: true
+        credentials: true
     }
-})
+});
 socketManager(io)
 httpServer.listen(PORT, ()=>{
     console.log(`Server are listening http://localhost:${PORT}`)
